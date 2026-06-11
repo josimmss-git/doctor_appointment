@@ -1,12 +1,11 @@
-import Image from "next/image";
 import Banner from "./components/Banner";
-import TopRatedPage from "./components/TopRate";
+import DoctorSection from "./components/DoctorSection"; // ✅ নতুন
 
 export default function Home() {
   return (
     <div>
       <Banner />
-      <TopRatedPage />
+      <DoctorSection /> {/* ✅ SearchBar + Cards সব এখানে */}
     </div>
   );
 }
