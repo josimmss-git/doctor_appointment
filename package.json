@@ -9,11 +9,17 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@better-auth/mongo-adapter": "^1.6.17",
     "@heroui/react": "^3.0.5",
     "@heroui/styles": "^3.0.5",
+    "@tabler/icons-react": "^3.44.0",
+    "better-auth": "^1.6.17",
+    "mongodb": "^7.3.0",
     "next": "16.2.6",
+    "next-auth": "^4.24.14",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "react-hot-toast": "^2.6.0",
     "react-icons": "^5.6.0"
   },
   "devDependencies": {

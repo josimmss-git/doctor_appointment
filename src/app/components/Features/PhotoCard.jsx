@@ -1,4 +1,4 @@
-"use client" // ✅ সবার উপরে এটা আবশ্যক
+"use client" // 
 
 import React from 'react';
 import { Button, Card } from "@heroui/react";
@@ -21,20 +21,21 @@ const PhotoCard = ({ photo }) => {
       </div>
 
       {/* Rating */}
-      <p className="text-sm font-medium text-yellow-500">⭐ {photo.rating}</p>
+      <p className="text-sm font-medium text-yellow-500">⭐⭐⭐ {photo.rating}</p>
 
       {/* Info */}
       <div className="flex flex-col gap-1">
         <h3 className="text-xl font-bold">{photo.name}</h3>
+        <p className="text-cyan-600 font-semibold">{photo.specialty}</p>
         <p className="text-gray-600 text-sm">Location: {photo.location}</p>
         <p className="text-gray-500 text-sm line-clamp-3">{photo.description}</p>
       </div>
 
       {/* Button */}
       <Button
-        className="w-full mt-auto cursor-pointer"
-        color="primary"
-        onClick={() => router.push(`/alldoctor/${photo._id}`)} // ✅ এটাই connection
+        className="w-full mt-auto cursor-pointer border rounded-lg"
+        variant="outline"
+        onClick={() => router.push(`/alldoctor/${photo._id}`)} // ✅ 
       >
         View Details
       </Button>

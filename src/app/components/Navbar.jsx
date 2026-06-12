@@ -3,8 +3,10 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { Avatar, Button } from "@heroui/react";
 
 const Navbar = () => {
+
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -34,7 +36,7 @@ const Navbar = () => {
               </li>
 
               <li>
-                <Link href="/AllAppointment">
+                <Link href="/all-appointment">
                   All Appointment
                 </Link>
               </li>
@@ -45,26 +47,21 @@ const Navbar = () => {
                 </Link>
               </li>
             </ul>
-
-            <ul className="flex gap-4">
-              <li>
-                <Link
-                  href="/login"
-                  className="px-4 py-2 border rounded"
-                >
-                  Login
-                </Link>
-              </li>
-
-              <li>
-                <Link
-                  href="/Register"
-                  className="px-4 py-2 bg-cyan-500 text-white rounded"
-                >
-                  Register
-                </Link>
-              </li>
+  
+        <div className="flex gap-4">
+    
+          <ul className="flex items-center  text-sm gap-4">
+            <li>
+              <Link href={"/signup"}>Register</Link>
+            </li>
+            <li>
+              <Link href={"/signin"}>Login</Link>
+            </li> 
             </ul>
+      
+
+              </div>
+        </div>
           </div>
 
           {/* Mobile Menu Button */}
@@ -77,46 +74,46 @@ const Navbar = () => {
         </div>
 
         {/* Mobile Menu */}
-        {isOpen && (
-          <div className="md:hidden pb-4">
-            <ul className="flex flex-col gap-4 text-center">
-              <li>
-                <Link href="/">Home</Link>
-              </li>
+      {isOpen && (
+        <div className="md:hidden pb-4">
+          <ul className="flex flex-col gap-4 text-center">
+            <li>
+              <Link href="/">Home</Link>
+            </li>
 
-              <li>
-                <Link href="/AllAppointment">
-                  All Appointment
-                </Link>
-              </li>
+            <li>
+              <Link href="/all-appointment">
+                All Appointment
+              </Link>
+            </li>
 
-              <li>
-                <Link href="/dashboard">
-                  Dashboard
-                </Link>
-              </li>
+            <li>
+              <Link href="/dashboard">
+                Dashboard
+              </Link>
+            </li>
 
-              <li>
-                <Link
-                  href="/login"
-                  className="block border rounded py-2"
-                >
-                  Login
-                </Link>
-              </li>
+            <li>
+              <Link
+                href="/login"
+                className="block border rounded py-2"
+              >
+                Login
+              </Link>
+            </li>
 
-              <li>
-                <Link
-                  href="/Register"
-                  className="block bg-cyan-500 text-white rounded py-2"
-                >
-                  Register
-                </Link>
-              </li>
-            </ul>
-          </div>
-        )}
-      </div>
+            <li>
+              <Link
+                href="/Register"
+                className="block bg-cyan-500 text-white rounded py-2"
+              >
+                Register
+              </Link>
+            </li>
+          </ul>
+        </div>
+      )}
+    
     </nav>
   );
 };
