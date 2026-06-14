@@ -20,15 +20,17 @@ export default function BookingModal({ doctor, userEmail }) {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await fetch("/api/bookings", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...form,
-          userEmail,
-          doctorName: doctor.name,
-        }),
-      });
+      const res = await fetch("http://localhost:8000/bookings", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    ...form,
+    userEmail,
+    doctorName: doctor.name,
+  }),
+});
 
       if (res.ok) {
         toast.success("Appointment booked successfully!");
