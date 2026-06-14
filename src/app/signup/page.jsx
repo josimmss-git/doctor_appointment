@@ -26,7 +26,7 @@ export default function RegisterPage() {
         body: JSON.stringify({ name, email, password, image }),
       });
 
-      const data = await res.json();
+ 
 
       if (data.error) {
         toast.error(data.error);
