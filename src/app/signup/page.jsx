@@ -1,135 +1,138 @@
 "use client";
-import { Check, } from "@gravity-ui/icons";
-import {
-  Button,
-  Card,
-  Description,
-  FieldError,
-  Form,
-  Input,
-  Label,
-  TextField,
-  
-} from "@heroui/react";
-// import { authClient } from "@/lib/auth-client";
+
+import { useState } from "react";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import Link from "next/link";
+import { signIn } from "next-auth/react";
 
-
-export default function SignUpPage() {
-const router=useRouter();
-
+export default function RegisterPage() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
-    const name = e.target.name.value;
-    const image = e.target.image.value;
-    const email = e.target.email.value;
-    const password = e.target.password.value;
+    try {
+      const name = e.target.name.value;
+      const image = e.target.image.value;
+      const email = e.target.email.value;
+      const password = e.target.password.value;
 
-    const { data, error } = await authClient.signUp.email({
-      name,
-      email,
-      password,
-      image,
-    })
-    
-    console.log(data, error);
+      const res = await fetch("/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password, image }),
+      });
 
-    if(!error){
-      router.push('/');
+      const data = await res.json();
+
+      if (data.error) {
+        toast.error(data.error);
+        return;
+      }
+
+      toast.success("Registration successful!");
+      router.push("/login");
+
+    } catch (err) {
+      toast.error("Something went wrong!");
+    } finally {
+      setLoading(false); // ✅ সবসময় false হবে
     }
-
   };
 
-  
-const handleGoogleSignUp = async () => {
- await authClient.signIn.social({
-    provider: "google",
-  });
-};
+  const handleGoogleSignUp = async () => {
+    await signIn("google", { callbackUrl: "/dashboard" });
+  };
 
   return (
-    <Card className="border mx-auto w-125 py-10 mt-5">
-      <h1 className="text-center text-2xl font-bold">Register</h1>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-10 w-full max-w-md">
+        <h1 className="text-2xl font-semibold text-center mb-6">Register</h1>
 
-      <Form className="flex w-96 mx-auto flex-col gap-4" onSubmit={onSubmit}>
-        <TextField isRequired name="name" type="text">
-          <Label>Name</Label>
-          <Input placeholder="Enter your name" />
-          <FieldError />
-        </TextField>
+        <form onSubmit={onSubmit} className="space-y-4">
 
-        <TextField isRequired name="image" type="text">
-          <Label>Image URL</Label>
-          <Input placeholder="Image URL" />
-          <FieldError />
-        </TextField>
+          {/* Name */}
+          <div>
+            <label className="text-sm text-gray-600">Name</label>
+            <input
+              name="name"
+              type="text"
+              required
+              placeholder="Enter your name"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm mt-1 focus:outline-none focus:border-blue-400"
+            />
+          </div>
 
-        <TextField
-          isRequired
-          name="email"
-          type="email"
-          validate={(value) => {
-            if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value)) {
-              return "Please enter a valid email address";
-            }
+          {/* Image URL */}
+          <div>
+            <label className="text-sm text-gray-600">Image URL</label>
+            <input
+              name="image"
+              type="text"
+              placeholder="https://..."
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm mt-1 focus:outline-none focus:border-blue-400"
+            />
+          </div>
 
-            return null;
-          }}
+          {/* Email */}
+          <div>
+            <label className="text-sm text-gray-600">Email</label>
+            <input
+              name="email"
+              type="email"
+              required
+              placeholder="john@example.com"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm mt-1 focus:outline-none focus:border-blue-400"
+            />
+          </div>
+
+          {/* Password */}
+          <div>
+            <label className="text-sm text-gray-600">Password</label>
+            <input
+              name="password"
+              type="password"
+              required
+              minLength={8}
+              placeholder="Min 8 chars, 1 uppercase, 1 number"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm mt-1 focus:outline-none focus:border-blue-400"
+            />
+          </div>
+
+          {/* Submit */}
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-blue-500 text-white py-2 rounded-lg text-sm hover:bg-blue-600 transition disabled:opacity-50"
+          >
+            {loading ? "Loading..." : "Register"}
+          </button>
+
+        </form>
+
+        {/* OR */}
+        <p className="text-center text-gray-400 my-4">OR</p>
+
+        {/* Google */}
+        <button
+          onClick={handleGoogleSignUp}
+          className="w-full border border-gray-300 text-gray-700 py-2 rounded-lg text-sm hover:bg-gray-50 transition"
         >
-          <Label>Email</Label>
-          <Input placeholder="john@example.com" />
-          <FieldError />
-        </TextField>
+          🌐 Register with Google
+        </button>
 
-        <TextField
-          isRequired
-          minLength={8}
-          name="password"
-          type="password"
-          validate={(value) => {
-            if (value.length < 8) {
-              return "Password must be at least 8 characters";
-            }
-            if (!/[A-Z]/.test(value)) {
-              return "Password must contain at least one uppercase letter";
-            }
-            if (!/[0-9]/.test(value)) {
-              return "Password must contain at least one number";
-            }
+        {/* Login link */}
+        <p className="text-center text-sm text-gray-400 mt-4">
+          Already have an account?{" "}
+          <Link href="/login" className="text-blue-500 hover:underline">
+            Login
+          </Link>
+        </p>
 
-            return null;
-          }}
-        >
-          <Label>Password</Label>
-          <Input placeholder="Enter your password" />
-          <Description>
-            Must be at least 8 characters with 1 uppercase and 1 number
-          </Description>
-          <FieldError />
-        </TextField>
-
-        <div className="flex gap-2">
-          <Button type="submit">
-            <Check />
-            Submit
-          </Button>
-          <Button type="reset" variant="secondary">
-            Reset
-          </Button>
-        </div>
-        
-      </Form>
-      <p className="text-center mt-4">OR</p>
-      <Button variant="outline" className={"mx-auto mt-4" }onClick={handleGoogleSignUp}>
-       
-        Register with Google
-      </Button>
-
-
-
-    </Card>
+      </div>
+    </div>
   );
 }
-

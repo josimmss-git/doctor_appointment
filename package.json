@@ -14,6 +14,7 @@
     "@heroui/react": "^3.0.5",
     "@heroui/styles": "^3.0.5",
     "@tabler/icons-react": "^3.44.0",
+    "bcryptjs": "^3.0.3",
     "better-auth": "^1.6.17",
     "mongodb": "^7.3.0",
     "next": "16.2.6",

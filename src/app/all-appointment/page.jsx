@@ -16,7 +16,9 @@ const AllAppointment =async () => {
       
       
 <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-     {photos.map(photo=> < PhotoCard key={photo.id} photo={photo} />)}
+    {photos.map((photo, index) => (
+  <PhotoCard key={index} photo={photo} />
+))}
       </div> 
 
     </div>

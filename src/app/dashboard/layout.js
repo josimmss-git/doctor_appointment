@@ -1,17 +1,29 @@
-import Sidebar from "@/app/components/layout/Sidebar";
-import Navbar from "@/app/components/layout/Navbar";
+"use client";
+
+import { useSession, signIn } from "next-auth/react";
+import { useEffect } from "react";
 
 export default function DashboardLayout({ children }) {
-  return (
-    <div className="flex min-h-screen">
-      <Sidebar />
+  const { data: session, status } = useSession();
 
-      <div className="flex-1 flex flex-col">
-        <Navbar />
-        <main className="p-6 bg-gray-50 min-h-screen">
-          {children}
-        </main>
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      signIn(); // login page এ পাঠাবে
+    }
+  }, [status]);
+
+  // Loading
+  if (status === "loading") {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-gray-400">লোড হচ্ছে...</p>
       </div>
-    </div>
-  );
+    );
+  }
+
+  // Login নেই
+  if (!session) return null;
+
+  // Login আছে
+  return <>{children}</>;
 }

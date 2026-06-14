@@ -1,17 +1,24 @@
 "use client";
 
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import BookingCard from "@/app/components/bookings/BookingCard";
+import UpdateModal from "@/app/components/bookings/UpdateModal";
+import toast from "react-hot-toast";
 
 export default function MyBookings() {
+  const { data: session } = useSession();
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedBooking, setSelectedBooking] = useState(null);
 
-  const userEmail = "test@gmail.com"; // পরে auth থেকে নিবে
+  // ✅ session থেকে real email
+  const userEmail = session?.user?.email;
 
-  // ডেটা লোড
   useEffect(() => {
-    fetch(`http://localhost:8000/appointments/${userEmail}`)
+    if (!userEmail) return;
+
+    fetch(`http://localhost:8000/appointments/${encodeURIComponent(userEmail)}`)
       .then((res) => res.json())
       .then((data) => {
         setBookings(data);
@@ -20,7 +27,6 @@ export default function MyBookings() {
       .catch(() => setLoading(false));
   }, [userEmail]);
 
-  // Delete
   const handleDelete = async (id) => {
     const confirm = window.confirm("Delete করবেন?");
     if (!confirm) return;
@@ -29,25 +35,22 @@ export default function MyBookings() {
       method: "DELETE",
     });
 
-    // UI থেকে সরিয়ে দাও
     setBookings((prev) => prev.filter((b) => b._id !== id));
+    toast.success("Appointment deleted successfully!");
   };
 
-  // Update (এখন console, পরে modal বসাবে)
   const handleUpdate = (booking) => {
-    console.log("Update করবো:", booking);
-    // এখানে পরে UpdateModal খুলবে
+    setSelectedBooking(booking);
   };
 
-  // Loading
-  if (loading) {
-    return <p className="text-gray-400">লোড হচ্ছে...</p>;
-  }
+  const handleUpdated = (updatedBooking) => {
+    setBookings((prev) =>
+      prev.map((b) => (b._id === updatedBooking._id ? updatedBooking : b))
+    );
+  };
 
-  // কোনো booking নেই
-  if (bookings.length === 0) {
-    return <p className="text-gray-400">কোনো booking পাওয়া যায়নি।</p>;
-  }
+  if (loading) return <p className="text-gray-400">লোড হচ্ছে...</p>;
+  if (bookings.length === 0) return <p className="text-gray-400">কোনো booking পাওয়া যায়নি।</p>;
 
   return (
     <div>
@@ -63,6 +66,14 @@ export default function MyBookings() {
           />
         ))}
       </div>
+
+      {selectedBooking && (
+        <UpdateModal
+          booking={selectedBooking}
+          onClose={() => setSelectedBooking(null)}
+          onUpdated={handleUpdated}
+        />
+      )}
     </div>
   );
 }
