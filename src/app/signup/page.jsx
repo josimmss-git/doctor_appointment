@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import Link from "next/link";
-import { signIn } from "next-auth/react";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -14,37 +14,42 @@ export default function RegisterPage() {
     e.preventDefault();
     setLoading(true);
 
-    try {
-      const name = e.target.name.value;
-      const image = e.target.image.value;
-      const email = e.target.email.value;
-      const password = e.target.password.value;
+    const name = e.target.name.value;
+    const image = e.target.image.value;
+    const email = e.target.email.value;
+    const password = e.target.password.value;
 
-      const res = await fetch("/api/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password, image }),
+    try {
+      const { error } = await authClient.signUp.email({
+        name,
+        email,
+        password,
+        image,
+       
       });
 
- 
+      console.log({data,error})
 
-      if (data.error) {
-        toast.error(data.error);
+      if (error) {
+        toast.error(error.message || "Registration failed!");
         return;
       }
 
       toast.success("Registration successful!");
-      router.push("/login");
+      router.push("/signin");
 
     } catch (err) {
       toast.error("Something went wrong!");
     } finally {
-      setLoading(false); // ✅ সবসময় false হবে
+      setLoading(false);
     }
   };
 
   const handleGoogleSignUp = async () => {
-    await signIn("google", { callbackUrl: "/dashboard" });
+    await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "/dashboard",
+    });
   };
 
   return (
@@ -127,7 +132,7 @@ export default function RegisterPage() {
         {/* Login link */}
         <p className="text-center text-sm text-gray-400 mt-4">
           Already have an account?{" "}
-          <Link href="/login" className="text-blue-500 hover:underline">
+          <Link href="/signin" className="text-blue-500 hover:underline">
             Login
           </Link>
         </p>

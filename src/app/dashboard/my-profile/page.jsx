@@ -1,29 +1,47 @@
 "use client";
 
-import { useSession } from "next-auth/react";
+import { authClient } from "@/lib/auth-client";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
 export default function MyProfile() {
-  const { data: session, update } = useSession();
+  const { data: session, isPending } = authClient.useSession();
   const [showModal, setShowModal] = useState(false);
-  const [form, setForm] = useState({ name: "", photo: "" });
+  const [form, setForm] = useState({ name: "", image: "" });
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const user = session?.user;
 
   const openModal = () => {
-    setForm({ name: user?.name || "", photo: user?.image || "" });
+    setForm({ name: user?.name || "", image: user?.image || "" });
     setShowModal(true);
   };
 
   const handleSubmit = async () => {
-    // session update করো
-    await update({ name: form.name, image: form.photo });
-    toast.success("Profile updated successfully!");
-    setShowModal(false);
+    setIsUpdating(true);
+    try {
+      await authClient.updateUser({
+        name: form.name,
+        image: form.image,
+      });
+      toast.success("Profile updated successfully!");
+      setShowModal(false);
+    } catch (err) {
+      toast.error("Update failed!");
+    } finally {
+      setIsUpdating(false);
+    }
   };
 
-  if (!user) return <p className="text-gray-400">লোড হচ্ছে...</p>;
+  if (isPending) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-gray-400">লোড হচ্ছে...</p>
+      </div>
+    );
+  }
+
+  if (!user) return null;
 
   return (
     <div className="max-w-md mx-auto mt-10">
@@ -31,7 +49,7 @@ export default function MyProfile() {
 
         {/* Photo */}
         <img
-          src={user.image || `https://ui-avatars.com/api/?name=${user.name}`}
+          src={user.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}`}
           alt={user.name}
           className="w-24 h-24 rounded-full mx-auto mb-4 object-cover border-4 border-blue-100"
         />
@@ -76,8 +94,8 @@ export default function MyProfile() {
             <div className="mb-5">
               <label className="text-xs text-gray-500">Photo URL</label>
               <input
-                value={form.photo}
-                onChange={(e) => setForm({ ...form, photo: e.target.value })}
+                value={form.image}
+                onChange={(e) => setForm({ ...form, image: e.target.value })}
                 placeholder="https://..."
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-400"
               />
@@ -92,9 +110,10 @@ export default function MyProfile() {
               </button>
               <button
                 onClick={handleSubmit}
-                className="flex-1 bg-blue-500 text-white py-2 rounded-lg text-sm hover:bg-blue-600"
+                disabled={isUpdating}
+                className="flex-1 bg-blue-500 text-white py-2 rounded-lg text-sm hover:bg-blue-600 disabled:opacity-50"
               >
-                Save
+                {isUpdating ? "Saving..." : "Save"}
               </button>
             </div>
           </div>

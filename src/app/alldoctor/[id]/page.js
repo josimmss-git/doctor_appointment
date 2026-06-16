@@ -1,20 +1,25 @@
 import BookingModal from "@/app/components/BookingModal";
 import Image from "next/image";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 const getDoctor = async (id) => {
   const res = await fetch(`http://localhost:8000/alldoctor/${id}`, {
     cache: "no-store",
   });
-  const data = await res.json();
-  return data;
+  return res.json();
 };
 
 export default async function DoctorDetailsPage({ params }) {
   const { id } = await params;
   const doctor = await getDoctor(id);
 
-  // ✅ এখন hardcode করা আছে, পরে next-auth দিয়ে real email নেবে
-  const userEmail = "user@gmail.com";
+  // ✅ Better Auth server side session
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  const userEmail = session?.user?.email;
 
   if (!doctor) {
     return <p className="text-center mt-10">Doctor not found</p>;
@@ -42,7 +47,6 @@ export default async function DoctorDetailsPage({ params }) {
         <p className="text-gray-600">{doctor.description}</p>
         <p>Availability: {doctor.availability}</p>
 
-        {/* ✅ শুধু BookingModal রাখো, আলাদা Button দরকার নেই */}
         <BookingModal doctor={doctor} userEmail={userEmail} />
       </div>
     </div>

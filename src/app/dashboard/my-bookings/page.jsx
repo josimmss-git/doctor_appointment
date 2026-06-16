@@ -1,19 +1,20 @@
 "use client";
 
-import { useSession } from "next-auth/react";
+import { authClient } from "@/lib/auth-client";
 import { useEffect, useState } from "react";
 import BookingCard from "@/app/components/bookings/BookingCard";
 import UpdateModal from "@/app/components/bookings/UpdateModal";
 import toast from "react-hot-toast";
 
 export default function MyBookings() {
-  const { data: session } = useSession();
+  const { data: session, isPending } = authClient.useSession();
+
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedBooking, setSelectedBooking] = useState(null);
 
-  // ✅ session থেকে real email
   const userEmail = session?.user?.email;
+  console.log("Session Email:", userEmail);
 
   useEffect(() => {
     if (!userEmail) return;
@@ -49,8 +50,15 @@ export default function MyBookings() {
     );
   };
 
-  if (loading) return <p className="text-gray-400">লোড হচ্ছে...</p>;
-  if (bookings.length === 0) return <p className="text-gray-400">কোনো booking পাওয়া যায়নি।</p>;
+  if (isPending || loading) {
+    return <p className="text-gray-400">লোড হচ্ছে...</p>;
+  }
+
+  console.log("Session Email:", userEmail);
+
+  if (bookings.length === 0) {
+    return <p className="text-gray-400">কোনো booking পাওয়া যায়নি।</p>;
+  }
 
   return (
     <div>
@@ -77,3 +85,5 @@ export default function MyBookings() {
     </div>
   );
 }
+
+

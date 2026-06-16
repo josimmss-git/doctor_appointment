@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { signIn } from "next-auth/react";
+import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import Link from "next/link";
@@ -17,13 +17,12 @@ export default function SignInPage() {
     const email = e.target.email.value;
     const password = e.target.password.value;
 
-    const result = await signIn("credentials", {
+    const { error } = await authClient.signIn.email({
       email,
       password,
-      redirect: false, // নিজে handle করবো
     });
 
-    if (result?.error) {
+    if (error) {
       toast.error("Email or password wrong!");
       setLoading(false);
       return;
@@ -34,7 +33,10 @@ export default function SignInPage() {
   };
 
   const handleGoogleSignIn = async () => {
-    await signIn("google", { callbackUrl: "/dashboard" });
+    await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "/dashboard",
+    });
   };
 
   return (
@@ -94,7 +96,7 @@ export default function SignInPage() {
         {/* Register link */}
         <p className="text-center text-sm text-gray-400 mt-4">
           Don't have an account?{" "}
-          <Link href="/register" className="text-blue-500 hover:underline">
+          <Link href="/signup" className="text-blue-500 hover:underline">
             Register
           </Link>
         </p>
