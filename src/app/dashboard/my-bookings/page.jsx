@@ -14,19 +14,26 @@ export default function MyBookings() {
   const [selectedBooking, setSelectedBooking] = useState(null);
 
   const userEmail = session?.user?.email;
-  console.log("Session Email:", userEmail);
+  
 
-  useEffect(() => {
-    if (!userEmail) return;
 
-    fetch(`http://localhost:8000/appointments/${encodeURIComponent(userEmail)}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setBookings(data);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, [userEmail]);
+useEffect(() => {
+  if (!userEmail) return;
+
+  fetch(`http://localhost:8000/appointments?email=${encodeURIComponent(userEmail)}`)
+    .then((res) => res.json())
+    .then((data) => {
+      console.log("Bookings data:", data); // ← যোগ করুন
+      setBookings(data);
+      setLoading(false);
+    })
+    .catch((err) => {
+      console.log("Error:", err); // ← এটাও যোগ করুন
+      setLoading(false);
+    });
+}, [userEmail]);
+
+
 
   const handleDelete = async (id) => {
     const confirm = window.confirm("Delete করবেন?");

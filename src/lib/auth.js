@@ -4,14 +4,16 @@ import { mongodbAdapter } from "better-auth/adapters/mongodb";
 
 const client = new MongoClient(process.env.MONGODB_URI);
 
-await client.connect();
+client.connect();
 
-const db = client.db("doctor_ppointment");
+const db = client.db("doctor_appointment");
+
+// ✅ debug করুন আগে
+console.log("GOOGLE ID:", process.env.GOOGLE_CLIENT_ID);
+console.log("GOOGLE SECRET:", process.env.GOOGLE_CLIENT_SECRET);
 
 export const auth = betterAuth({
-  database: mongodbAdapter(db, {
-    client,
-  }),
+  database: mongodbAdapter(db),
 
   emailAndPassword: {
     enabled: true,
@@ -19,8 +21,8 @@ export const auth = betterAuth({
 
   socialProviders: {
     google: {
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET
+      clientId: process.env.GOOGLE_CLIENT_ID || "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
     },
-  },}
-);
+  },
+});

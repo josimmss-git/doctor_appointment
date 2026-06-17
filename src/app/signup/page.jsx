@@ -20,15 +20,15 @@ export default function RegisterPage() {
     const password = e.target.password.value;
 
     try {
-      const { error } = await authClient.signUp.email({
+      // ✅ Fix: data যুক্ত করা হয়েছে
+      const { data, error } = await authClient.signUp.email({
         name,
         email,
         password,
         image,
-       
       });
 
-      console.log({data,error})
+      console.log({ data, error });
 
       if (error) {
         toast.error(error.message || "Registration failed!");
@@ -59,7 +59,6 @@ export default function RegisterPage() {
 
         <form onSubmit={onSubmit} className="space-y-4">
 
-          {/* Name */}
           <div>
             <label className="text-sm text-gray-600">Name</label>
             <input
@@ -71,7 +70,6 @@ export default function RegisterPage() {
             />
           </div>
 
-          {/* Image URL */}
           <div>
             <label className="text-sm text-gray-600">Image URL</label>
             <input
@@ -82,7 +80,6 @@ export default function RegisterPage() {
             />
           </div>
 
-          {/* Email */}
           <div>
             <label className="text-sm text-gray-600">Email</label>
             <input
@@ -94,7 +91,6 @@ export default function RegisterPage() {
             />
           </div>
 
-          {/* Password */}
           <div>
             <label className="text-sm text-gray-600">Password</label>
             <input
@@ -107,7 +103,6 @@ export default function RegisterPage() {
             />
           </div>
 
-          {/* Submit */}
           <button
             type="submit"
             disabled={loading}
@@ -118,18 +113,15 @@ export default function RegisterPage() {
 
         </form>
 
-        {/* OR */}
         <p className="text-center text-gray-400 my-4">OR</p>
 
-        {/* Google */}
         <button
           onClick={handleGoogleSignUp}
           className="w-full border border-gray-300 text-gray-700 py-2 rounded-lg text-sm hover:bg-gray-50 transition"
         >
-          🌐 Register with Google
+          Register with Google
         </button>
 
-        {/* Login link */}
         <p className="text-center text-sm text-gray-400 mt-4">
           Already have an account?{" "}
           <Link href="/signin" className="text-blue-500 hover:underline">
