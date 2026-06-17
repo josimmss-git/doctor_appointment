@@ -5,12 +5,21 @@ import Image from "next/image";
 import Link from "next/link";
 import { Avatar, Button } from "@heroui/react";
 import { authClient } from "@/lib/auth-client";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 const Navbar = () => {
   const { data: session } = authClient.useSession();
   const user = session?.user;
+  const router = useRouter();
 
   const [isOpen, setIsOpen] = useState(false);
+
+  const handleLogout = async () => {
+    await authClient.signOut();
+    toast.success("Logout successful! 👋");
+    router.push("/");
+  };
 
   return (
     <nav className="bg-white shadow-md">
@@ -37,7 +46,6 @@ const Navbar = () => {
               <li><Link href="/dashboard">Dashboard</Link></li>
             </ul>
 
-        
             <div className="flex items-center gap-4">
               {user ? (
                 <>
@@ -50,14 +58,23 @@ const Navbar = () => {
                     <Avatar.Fallback>{user?.name?.charAt(0)}</Avatar.Fallback>
                   </Avatar>
 
-                  <Button className="bg-red-500 rounded-2xl p-2 cursor-pointer text-white" onPress={() => authClient.signOut()}>
+                  {/* ✅ Logout with toast */}
+                  <Button
+                    className="bg-red-500 rounded-2xl p-2 cursor-pointer text-white"
+                    onPress={handleLogout}
+                  >
                     Logout
                   </Button>
                 </>
               ) : (
                 <div className="flex items-center text-sm gap-4">
                   <Link href="/signup">Register</Link>
-                  <Link href="/signin">Login</Link>
+                  <Link
+                    href="/signin"
+                   
+                  >
+                    Login
+                  </Link>
                 </div>
               )}
             </div>
@@ -81,27 +98,31 @@ const Navbar = () => {
               <li><Link href="/dashboard">Dashboard</Link></li>
 
               <li>
-                  {user ? (
-                <>
-                  <Avatar>
-                    <Avatar.Image
-                      alt={user?.name}
-                      src={user?.image}
-                      className="w-10 rounded-3xl"
-                    />
-                    <Avatar.Fallback>{user?.name?.charAt(0)}</Avatar.Fallback>
-                  </Avatar>
+                {user ? (
+                  <>
+                    <Avatar>
+                      <Avatar.Image
+                        alt={user?.name}
+                        src={user?.image}
+                        className="w-10 rounded-3xl"
+                      />
+                      <Avatar.Fallback>{user?.name?.charAt(0)}</Avatar.Fallback>
+                    </Avatar>
 
-                  <Button className="bg-red-500 rounded-2xl p-2 cursor-pointer text-white" onPress={() => authClient.signOut()}>
-                    Logout
-                  </Button>
-                </>
-              ) : (
-                <div className="flex items-center text-sm gap-4">
-                  <Link href="/signup">Register</Link>
-                  <Link href="/signin">Login</Link>
-                </div>
-              )}
+                    {/* ✅ Mobile Logout with toast */}
+                    <Button
+                      className="bg-red-500 rounded-2xl p-2 cursor-pointer text-white"
+                      onPress={handleLogout}
+                    >
+                      Logout
+                    </Button>
+                  </>
+                ) : (
+                  <div className="flex items-center justify-center text-sm gap-4">
+                    <Link href="/signup">Register</Link>
+                    <Link href="/signin">Login</Link>
+                  </div>
+                )}
               </li>
             </ul>
           </div>

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import PhotoCard from "@/components/PhotoCard";
 
 export default function TopRatedPage() {
-  const [doctors, setDoctors] = useState([]);
+  // const [doctors, setDoctors] = useState([]);
   const [filtered, setFiltered] = useState([]);
 
   useEffect(() => {
@@ -16,15 +16,15 @@ export default function TopRatedPage() {
       });
   }, []);
 
-  // ✅ SearchBar থেকে search পাবে
-  const handleSearch = ({ query, specialty }) => {
-    const result = doctors.filter((doc) => {
-      const matchName = doc.name.toLowerCase().includes(query.toLowerCase());
-      const matchSpecialty = specialty === "" || doc.specialty === specialty;
-      return matchName && matchSpecialty;
-    });
-    setFiltered(result);
-  };
+  // // ✅ SearchBar থেকে search পাবে
+  // const handleSearch = ({ query, specialty }) => {
+  //   const result = doctors.filter((doc) => {
+  //     const matchName = doc.name.toLowerCase().includes(query.toLowerCase());
+  //     const matchSpecialty = specialty === "" || doc.specialty === specialty;
+  //     return matchName && matchSpecialty;
+  //   });
+  //   setFiltered(result);
+  // };
 
   return (
     <div className="max-w-6xl mx-auto p-6">

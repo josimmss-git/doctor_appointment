@@ -1,28 +1,17 @@
-import React from 'react';
-import PhotoCard from '../components/Features/PhotoCard';
+import DoctorList from "@/app/components/DoctorList";
 
+export const dynamic = "force-dynamic";
 
-export const dynamic = 'force-dynamic'
+export default async function AllAppointment() {
+  const res = await fetch("http://localhost:8000/alldoctor");
+  const doctors = await res.json();
 
-
-const AllAppointment =async () => {
-  const res = await fetch('http://localhost:8000/alldoctor')
-  const photos = await res.json()
-  console.log(photos)
   return (
-     <div>
-      <h2 className='text-2xl font-bold m-4 flex text-center justify-center'>All Doctors</h2>
-
-      
-      
-<div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-    {photos.map((photo, index) => (
-  <PhotoCard key={index} photo={photo} />
-))}
-      </div> 
-
+    <div>
+      <h2 className="text-2xl font-bold m-4 flex text-center justify-center">
+        All Doctors
+      </h2>
+      <DoctorList doctors={doctors} />
     </div>
   );
-};
-
-export default AllAppointment;
+}
