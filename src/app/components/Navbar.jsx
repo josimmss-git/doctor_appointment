@@ -4,8 +4,11 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Avatar, Button } from "@heroui/react";
+import { authClient } from "@/lib/auth-client";
 
 const Navbar = () => {
+  const { data: session } = authClient.useSession();
+  const user = session?.user;
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -23,45 +26,41 @@ const Navbar = () => {
               alt="logo"
               className="h-10 w-auto"
             />
-            <h2 className="font-bold text-xl md:text-2xl">
-              DocAppoint
-            </h2>
+            <h2 className="font-bold text-xl md:text-2xl">DocAppoint</h2>
           </div>
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center gap-8">
             <ul className="flex gap-6">
-              <li>
-                <Link href="/">Home</Link>
-              </li>
-
-              <li>
-                <Link href="/all-appointment">
-                  All Appointment
-                </Link>
-              </li>
-
-              <li>
-                <Link href="/dashboard">
-                  Dashboard
-                </Link>
-              </li>
+              <li><Link href="/">Home</Link></li>
+              <li><Link href="/all-appointment">All Appointment</Link></li>
+              <li><Link href="/dashboard">Dashboard</Link></li>
             </ul>
-  
-        <div className="flex gap-4">
-    
-          <ul className="flex items-center  text-sm gap-4">
-            <li>
-              <Link href={"/signup"}>Register</Link>
-            </li>
-            <li>
-              <Link href={"/signin"}>Login</Link>
-            </li> 
-            </ul>
-      
 
-              </div>
-        </div>
+        
+            <div className="flex items-center gap-4">
+              {user ? (
+                <>
+                  <Avatar>
+                    <Avatar.Image
+                      alt={user?.name}
+                      src={user?.image}
+                      className="w-10 rounded-3xl"
+                    />
+                    <Avatar.Fallback>{user?.name?.charAt(0)}</Avatar.Fallback>
+                  </Avatar>
+
+                  <Button className="bg-red-500 rounded-2xl p-2 cursor-pointer text-white" onPress={() => authClient.signOut()}>
+                    Logout
+                  </Button>
+                </>
+              ) : (
+                <div className="flex items-center text-sm gap-4">
+                  <Link href="/signup">Register</Link>
+                  <Link href="/signin">Login</Link>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Mobile Menu Button */}
@@ -74,46 +73,40 @@ const Navbar = () => {
         </div>
 
         {/* Mobile Menu */}
-      {isOpen && (
-        <div className="md:hidden pb-4">
-          <ul className="flex flex-col gap-4 text-center">
-            <li>
-              <Link href="/">Home</Link>
-            </li>
+        {isOpen && (
+          <div className="md:hidden pb-4">
+            <ul className="flex flex-col gap-4 text-center">
+              <li><Link href="/">Home</Link></li>
+              <li><Link href="/all-appointment">All Appointment</Link></li>
+              <li><Link href="/dashboard">Dashboard</Link></li>
 
-            <li>
-              <Link href="/all-appointment">
-                All Appointment
-              </Link>
-            </li>
+              <li>
+                  {user ? (
+                <>
+                  <Avatar>
+                    <Avatar.Image
+                      alt={user?.name}
+                      src={user?.image}
+                      className="w-10 rounded-3xl"
+                    />
+                    <Avatar.Fallback>{user?.name?.charAt(0)}</Avatar.Fallback>
+                  </Avatar>
 
-            <li>
-              <Link href="/dashboard">
-                Dashboard
-              </Link>
-            </li>
-
-            <li>
-              <Link
-                href="/login"
-                className="block border rounded py-2"
-              >
-                Login
-              </Link>
-            </li>
-
-            <li>
-              <Link
-                href="/Register"
-                className="block bg-cyan-500 text-white rounded py-2"
-              >
-                Register
-              </Link>
-            </li>
-          </ul>
-        </div>
-      )}
-    
+                  <Button className="bg-red-500 rounded-2xl p-2 cursor-pointer text-white" onPress={() => authClient.signOut()}>
+                    Logout
+                  </Button>
+                </>
+              ) : (
+                <div className="flex items-center text-sm gap-4">
+                  <Link href="/signup">Register</Link>
+                  <Link href="/signin">Login</Link>
+                </div>
+              )}
+              </li>
+            </ul>
+          </div>
+        )}
+      </div>
     </nav>
   );
 };

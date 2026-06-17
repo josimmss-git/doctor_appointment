@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import Link from "next/link";
 
@@ -22,6 +22,10 @@ export default function SignInPage() {
       password,
     });
 
+    // if (data) {
+    //   redirect('/')
+    // }
+
     if (error) {
       toast.error("Email or password wrong!");
       setLoading(false);
@@ -29,13 +33,13 @@ export default function SignInPage() {
     }
 
     toast.success("Login successful!");
-    router.push("/dashboard");
+    router.push("/");
   };
 
   const handleGoogleSignIn = async () => {
     await authClient.signIn.social({
       provider: "google",
-      callbackURL: "/dashboard",
+      callbackURL: "/",
     });
   };
 
