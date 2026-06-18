@@ -3,6 +3,14 @@ import Image from "next/image";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 
+export async function generateMetadata() {
+  return {
+    title: "Doctor Details",
+    description:
+      "View doctor profile, specialty, experience, and appointment availability.",
+  };
+}
+
 const getDoctor = async (id) => {
   const res = await fetch(`http://localhost:8000/alldoctor/${id}`, {
     cache: "no-store",
