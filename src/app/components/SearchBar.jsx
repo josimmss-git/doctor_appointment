@@ -22,7 +22,7 @@ export default function SearchBar({ onSearch, specialties = [] }) {
     <div className="flex flex-col md:flex-row gap-3 max-w-6xl mx-auto px-6 mb-4">
       <input
         type="text"
-        placeholder="🔍 Doctor এর নাম লিখুন..."
+        placeholder="🔍Please write Doctors Name..."
         value={query}
         onChange={handleSearch}
         className="border rounded-xl px-4 py-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"

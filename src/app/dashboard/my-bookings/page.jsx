@@ -23,12 +23,12 @@ useEffect(() => {
   fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/appointments?email=${encodeURIComponent(userEmail)}`)
     .then((res) => res.json())
     .then((data) => {
-      console.log("Bookings data:", data); // ← যোগ করুন
+      console.log("Bookings data:", data); 
       setBookings(data);
       setLoading(false);
     })
     .catch((err) => {
-      console.log("Error:", err); // ← এটাও যোগ করুন
+      console.log("Error:", err);
       setLoading(false);
     });
 }, [userEmail]);
@@ -36,10 +36,10 @@ useEffect(() => {
 
 
   const handleDelete = async (id) => {
-    const confirm = window.confirm("Delete করবেন?");
+    const confirm = window.confirm(" Are you sure?");
     if (!confirm) return;
 
-    await fetch(`http://localhost:8000/appointments/${id}`, {
+    await fetch(`${NEXT_PUBLIC_SERVER_URL}/appointments/${id}`, {
       method: "DELETE",
     });
 
@@ -58,13 +58,13 @@ useEffect(() => {
   };
 
   if (isPending || loading) {
-    return <p className="text-gray-400">লোড হচ্ছে...</p>;
+    return <p className="text-gray-400">Loading...</p>;
   }
 
   console.log("Session Email:", userEmail);
 
   if (bookings.length === 0) {
-    return <p className="text-gray-400">কোনো booking পাওয়া যায়নি।</p>;
+    return <p className="text-gray-400">Booking Emety</p>;
   }
 
   return (

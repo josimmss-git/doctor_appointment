@@ -75,7 +75,7 @@ export default function DoctorSection() {
       {/* Cards */}
       {filtered.length === 0 ? (
         <p className="text-center text-gray-400 mt-20 text-lg">
-          😔 কোনো Doctor পাওয়া যায়নি
+          😔There is no Doctors
         </p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
