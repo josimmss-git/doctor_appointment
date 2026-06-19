@@ -12,7 +12,7 @@ export async function generateMetadata() {
 }
 
 const getDoctor = async (id) => {
-  const res = await fetch(`http://localhost:8000/alldoctor/${id}`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/alldoctor/${id}`, {
     cache: "no-store",
   });
   return res.json();

@@ -7,7 +7,8 @@ export default function MyBookings() {
   const [bookings, setBookings] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8000/appointments/test@gmail.com")
+    fetch(`${ NEXT_PUBLIC_SERVER_URL}/ appointments / test@gmail.com
+  `)
       .then(res => res.json())
       .then(setBookings);
   }, []);

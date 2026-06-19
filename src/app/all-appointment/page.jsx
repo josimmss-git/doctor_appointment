@@ -9,7 +9,7 @@ export const metadata = {
 };
 
 export default async function AllAppointment() {
-  const res = await fetch("http://localhost:8000/alldoctor");
+  const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/alldoctor`);
   const doctors = await res.json();
 
   return (

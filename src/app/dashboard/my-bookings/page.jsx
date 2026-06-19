@@ -20,7 +20,7 @@ export default function MyBookings() {
 useEffect(() => {
   if (!userEmail) return;
 
-  fetch(`http://localhost:8000/appointments?email=${encodeURIComponent(userEmail)}`)
+  fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/appointments?email=${encodeURIComponent(userEmail)}`)
     .then((res) => res.json())
     .then((data) => {
       console.log("Bookings data:", data); // ← যোগ করুন

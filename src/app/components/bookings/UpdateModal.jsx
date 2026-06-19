@@ -17,7 +17,7 @@ export default function UpdateModal({ booking, onClose, onUpdated }) {
   };
 
   const handleSubmit = async () => {
-    await fetch(`http://localhost:8000/appointments/${booking._id}`, {
+    await fetch(`NEXT_PUBLIC_SERVER_URL/appointments/${booking._id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form),
